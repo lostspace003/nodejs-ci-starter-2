@@ -18,10 +18,10 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
-          username: lostspace003
+          username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'Build and Push the image'
         run: |
-          docker build . --tag ghcr.io/${{ github.repository_owner }}/hello:latest
-          docker push ghcr.io/${{ github.repository_owner }}/hello:latest
+          docker build . --tag ghcr.io/${{ github.repository_owner }}/nodejs-ci-starter-2:latest
+          docker push ghcr.io/${{ github.repository_owner }}/nodejs-ci-starter-2:latest
