@@ -1,3 +1,6 @@
+# Status Update of the Repo
+[![Matrix Example](https://github.com/lostspace003/nodejs-ci-starter-2/actions/workflows/matrix-job.yaml/badge.svg)](https://github.com/lostspace003/nodejs-ci-starter-2/actions/workflows/matrix-job.yaml)
+
 # nodejs-ci-starter
 
 A tiny Node.js repo tailored for the provided GitHub Actions workflow. It has:
