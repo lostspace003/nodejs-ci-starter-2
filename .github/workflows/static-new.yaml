@@ -1,0 +1,80 @@
+name: Node.js CI with GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the project
+        run: npm run build
+
+      # Auto-detect the static output directory that contains index.html
+      - name: Detect build output
+        id: detect
+        run: |
+          set -euo pipefail
+          CANDIDATES=("dist" "build" "out")
+          # Angular: dist/<project-name>
+          for d in "${CANDIDATES[@]}" dist/*; do
+            if [ -d "$d" ] && [ -f "$d/index.html" ]; then
+              echo "path=$d" >> "$GITHUB_OUTPUT"
+              echo "Detected build output at: $d"
+              exit 0
+            fi
+          done
+          echo "No index.html found in dist/, build/, out/, or dist/*"
+          echo "Here are any index.html files near the root (if any):"
+          find . -maxdepth 3 -type f -name index.html || true
+          exit 1
+
+      # Optional: SPA fallback to avoid 404s on client-side routes
+      - name: Add SPA 404 fallback
+        if: ${{ steps.detect.outputs.path }}
+        run: cp "${{ steps.detect.outputs.path }}/index.html" "${{ steps.detect.outputs.path }}/404.html"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload production files
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ steps.detect.outputs.path }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Deployment Success
+        run: echo "Deployed successfully to GitHub Pages."
