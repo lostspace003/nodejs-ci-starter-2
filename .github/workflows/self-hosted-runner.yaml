@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-    runs-on: certification
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
