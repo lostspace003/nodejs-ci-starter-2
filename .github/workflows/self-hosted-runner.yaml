@@ -1,0 +1,29 @@
+name: node.js CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: certification
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14
+
+      - name: Run install
+        run: npm install
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy the application
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: npm run deploy
