@@ -1,5 +1,5 @@
 {
-  "name": "nodejs-ci-starter",
+  "name": "nodejs-ci-starter-2",
   "version": "1.0.0",
   "description": "Minimal Node.js project designed to pass the provided GitHub Actions CI workflow (build + test) on Node 14.",
   "main": "src/index.js",
