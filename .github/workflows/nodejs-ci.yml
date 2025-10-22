@@ -1,8 +1,8 @@
 name: node.js CI
 on: [push]
+
 jobs: #<-- start the jobs encapsulation
- name:
-   build: #<--start the build job encapsulation
+  build: #<--start the build job encapsulation
     runs-on: ubuntu-latest
     steps: # <-- start of steps encapsulation within 'build' job
       - name: Checkout code
